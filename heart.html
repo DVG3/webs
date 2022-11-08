@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body
+        {
+            background-color: rgb(24, 24, 24);
+        }
+        particle
+        {
+            box-shadow:  0 0 0.5rem 0 rgba(255, 0, 0, 0.285);
+            border-radius: 10px;
+            font-size: 50px;
+            text-align: center;
+        }
+        div
+        {
+            text-align: center;
+            position: absolute;
+            left: 50vw;
+            top:50vh;
+            transform: translate(-45%,-100%);
+            color: rgb(255, 136, 136);
+            text-shadow: 2px 2px 3px red;
+            transition: all 100ms;
+            animation: blinks;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes blinks
+        {
+            0%
+            {
+                text-shadow: 2px 2px 3px red;
+            }
+            100%
+            {
+                text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.575);
+            }
+        }
+    </style>
+    <title>Heart:33</title>
+</head>
+<body>
+    <ParticleSystem data-x ="50vw" data-y = "50vh">
+        
+    </ParticleSystem>
+    <div>
+        NGÂN
+    </div>
+    
+    <script>
+
+
+        function CreateParticle(x = 0,y = 0,size = "100px", speed = "all_1000ms",direction="0px,0px")
+        {   
+            
+            return `<particle data-size = ${size} data-x = ${x} , data-y=${y} ,data-moveSpeed=${speed}, data-direction=${direction} ></particle>` 
+        }
+
+        function CreateHeart(t)
+        {
+            x = Math.sin(t) * Math.cos(t) * Math.log(Math.abs(t));
+            y = Math.sqrt(Math.abs(t)) * Math.cos(t) 
+            return `${x * 300}px,${(y - 0.3) * -300}px`
+        }
+
+        setInterval(()=>{
+            document.querySelectorAll("particle").forEach(particle=>{
+                if (particle.classList.length > 0) return
+                particle.style.position = "absolute";
+                particle.style.top = particle.dataset.x;
+                particle.style.left = particle.dataset.y;
+                
+                direction = particle.dataset.direction;
+                particle.style.width = particle.dataset.size;
+                particle.style.height = particle.dataset.size;
+                particle.style.display = "block";
+                particle.style.backgroundColor = "red";
+                particle.classList.add("done")
+                
+                setTimeout(()=>{
+                    particle.style.transform = `translate(${particle.dataset.direction})`
+
+                },1)
+            })
+
+        })
+        
+
+        document.querySelectorAll("ParticleSystem").forEach(particleSystem =>
+            {
+                particleSystem.style.position = "absolute";
+                particleSystem.style.top = particleSystem.dataset.y;
+                particleSystem.style.left = particleSystem.dataset.x;
+                cnt = 0
+                index = -1
+                setInterval(()=>{
+                    if (index <= 0.03 && index >= -0.03) 
+                    {
+                        index += Math.random() / 750; 
+                        console.log("Very Slow")
+                    }else
+                    if (index <= 0.2 && index >= -0.2) 
+                    {
+                        index += Math.random() / 250; 
+                        console.log("Slow")
+                    }
+                    else
+                    {
+                        index += Math.random()/80;
+
+                    }
+                    if (cnt > 100)
+                    {
+                        particleSystem.querySelector("particle").remove();
+                    }
+                    cnt++
+                    if (index > 1) index = -1;
+                    if (index < -1) index = 1;
+                    heart = CreateHeart(index)
+                    particleSystem.innerHTML += CreateParticle(0,0,"10px","all_1000ms",heart)
+                },10)
+          
+            }
+        )
+
+        
+    </script>
+</body>
+</html>
